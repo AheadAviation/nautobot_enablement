@@ -1,0 +1,54 @@
+ARG PYTHON_VER=3.9
+ARG NAUTOBOT_VERSION=2.1.2
+
+FROM networktocode/nautobot:${NAUTOBOT_VERSION}-py${PYTHON_VER} as base
+
+USER 0
+RUN apt-get update -y && apt-get install -y libldap2-dev libsasl2-dev libssl-dev
+
+# ---------------------------------
+# Stage: Builder
+# ---------------------------------
+FROM base as builder
+
+RUN apt-get install -y gcc && \
+    apt-get autoremove -y && \
+    apt-get clean all && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install --upgrade pip wheel && pip3 install django-auth-ldap
+
+#RUN pip install git+https://github.com/nautobot/nautobot-plugin-firewall-models.git
+#RUN pip install git+https://github.com/nautobot/nautobot-plugin-circuit-maintenance.git
+#RUN pip install git+https://github.com/nautobot/nautobot-plugin-version-control.git
+#RUN pip install git+https://github.com/nautobot/nautobot-app-floor-plan.git
+#RUN pip install git+https://github.com/nautobot/nautobot-app-chatops.git
+
+RUN pip install git+https://github.com/nautobot/nautobot-plugin-golden-config.git@v2.0.1
+RUN pip install git+https://github.com/nautobot/nautobot-plugin-welcome-wizard.git@v2.0.0
+RUN pip install nautobot-ssot[all]==2.2.0
+RUN pip install git+https://github.com/nautobot/nautobot-plugin-capacity-metrics.git@v3.0.1
+RUN pip install git+https://github.com/nautobot/nautobot-plugin-device-lifecycle-mgmt.git@v2.0.3
+RUN pip install git+https://github.com/nautobot/nautobot-plugin-bgp-models.git@v0.20.0
+RUN pip install git+https://github.com/nautobot/nautobot-plugin-secrets-providers.git@v2.0.1
+RUN pip install git+https://github.com/nautobot/nautobot-plugin-nornir.git@v2.0.0
+RUN pip install git+https://github.com/nautobot/nautobot-plugin-device-onboarding.git@v3.0.1
+RUN pip install git+https://github.com/nautobot/nautobot-app-data-validation-engine.git@v3.1.0
+RUN pip install git+ssh://git@github.com/AHEAD-Labs/nautobot-vsphere.git
+
+
+# ---------------------------------
+# Stage: Final
+# ---------------------------------
+FROM base as final
+ARG PYTHON_VER
+USER 0
+
+COPY --from=builder /usr/local/lib/python${PYTHON_VER}/site-packages /usr/local/lib/python${PYTHON_VER}/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+# Copy Nautobot configuration file
+COPY ./nautobot_config.py /opt/nautobot/nautobot_config.py
+
+USER nautobot
+
+WORKDIR /opt/nautobot
