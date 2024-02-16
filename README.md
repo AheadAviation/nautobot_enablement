@@ -1,7 +1,3 @@
-Below is a sample README content that provides an overview of your enablement lab and instructions on how to get started. You can adjust the text to fit the specific details and goals of your project more closely.
-
----
-
 # Nautobot Enablement Lab
 
 ## Overview
