@@ -34,8 +34,6 @@ RUN pip install git+https://github.com/nautobot/nautobot-plugin-secrets-provider
 RUN pip install git+https://github.com/nautobot/nautobot-plugin-nornir.git@v2.0.0
 RUN pip install git+https://github.com/nautobot/nautobot-plugin-device-onboarding.git@v3.0.1
 RUN pip install git+https://github.com/nautobot/nautobot-app-data-validation-engine.git@v3.1.0
-RUN pip install git+ssh://git@github.com/AHEAD-Labs/nautobot-vsphere.git
-
 
 # ---------------------------------
 # Stage: Final
