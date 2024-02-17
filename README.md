@@ -1,7 +1,3 @@
-Below is a sample README content that provides an overview of your enablement lab and instructions on how to get started. You can adjust the text to fit the specific details and goals of your project more closely.
-
----
-
 # Nautobot Enablement Lab
 
 ## Overview
@@ -54,6 +50,3 @@ After the setup, you're ready to explore Nautobot's features. Consider the follo
 
 For issues, suggestions, or contributions, please open an issue or pull request in our GitHub repository. Your feedback and contributions are valuable to us as we strive to make this lab as effective and user-friendly as possible.
 
----
-
-Ensure to replace `<your-server-ip>` with the actual IP address of your server where Nautobot is hosted. This README template provides a comprehensive guide for users to get started with your Nautobot Enablement Lab, outlining the purpose, setup instructions, and next steps for exploring Nautobot's capabilities.
