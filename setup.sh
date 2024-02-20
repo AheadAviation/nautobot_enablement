@@ -1,31 +1,60 @@
 #!/bin/bash
 
-# Update package list
-sudo apt-get update
+# Ensure running as root
+if [ "$(id -u)" -ne 0 ]; then
+  echo "This script must be run as root" >&2
+  exit 1
+fi
+
+# Detect architecture, distribution, and version
+ARCH=$(dpkg --print-architecture)
+OS=$(awk -F= '/^NAME/{print $2}' /etc/os-release | tr -d '"')
+VERSION=$(awk -F= '/^VERSION_ID/{print $2}' /etc/os-release | tr -d '"')
+
+# Update package list and upgrade packages
+apt-get update && apt-get upgrade -y
 
 # Install required packages
-sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common git
+apt-get install -y apt-transport-https ca-certificates curl software-properties-common git aptitude gnupg2 network-manager net-tools open-vm-tools wget yamllint python3 python3-pip python3-venv python3-dev python3-setuptools python3-wheel python3-apt
 
-# Install Docker
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-sudo apt-get update
-sudo apt-get install -y docker-ce
+# Docker and Docker Compose Installation
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo \
+  "deb [arch=$ARCH signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+apt-get update
+apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-# Install Docker Compose
-sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
+# Enable and start Docker
+systemctl enable docker.service
+systemctl enable containerd.service
 
-# Verify Installation
-docker --version
-docker-compose --version
+# Add current user to Docker and containerlab groups
+groupadd docker || true
+groupadd containerlab || true
+usermod -aG docker $SUDO_USER
+usermod -aG containerlab $SUDO_USER
 
-# Install Git
-sudo apt-get install -y git
+# Install Python3 packages
+pip3 install gdown ansible --upgrade
 
-# Clone your repository
-git clone https://github.com/AheadAviation/nautobot_enablement.git
-cd nautobot_enablement
+# Arista Containerlab and Ansible Installation
+bash -c "$(curl -sL https://get.containerlab.dev)"
+add-apt-repository --yes --update ppa:ansible/ansible
+pipx install --include-deps ansible
 
-# Run Docker Compose
+# Git configurations
+git config --global user.email "autolab@ahead.com"
+
+# Install Nautobot
+echo "Installing Nautobot"
+git clone https://github.com/AheadAviation/nautobot_enablement.git /opt/nautobot_enablement
+cd /opt/nautobot_enablement
 docker-compose up -d
+echo "Nautobot installation completed"
+
+# Apply needrestart configuration to suppress restart dialogs
+sed -i 's/#$nrconf{restart} = '"'"'i'"'"';/$nrconf{restart} = '"'"'a'"'"';/g' /etc/needrestart/needrestart.conf
+
+# Reload shell to apply changes
+echo "Please logout and log back in for group changes to take effect."
