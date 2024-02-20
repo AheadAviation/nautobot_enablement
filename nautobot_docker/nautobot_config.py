@@ -4,7 +4,7 @@ def is_truthy(value):
     return str(value).lower() in ['true', '1', 'yes']
 
 # In your configuration.py
-PLUGINS = ["nautobot_ssot", "nautobot_device_lifecycle_mgmt", "nautobot_bgp_models", "nautobot_plugin_nornir", "nautobot_device_onboarding", "nautobot_capacity_metrics", "nautobot_golden_config", "nautobot_secrets_providers" ]
+PLUGINS = ["nautobot_ssot", "nautobot_device_lifecycle_mgmt", "nautobot_bgp_models", "nautobot_plugin_nornir", "nautobot_device_onboarding", "nautobot_capacity_metrics", "nautobot_golden_config" ]
 
 PLUGINS_CONFIG = {
   "nautobot_ssot": {

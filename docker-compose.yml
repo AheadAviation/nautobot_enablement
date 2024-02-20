@@ -3,7 +3,7 @@ version: "3.7"
 services:
   nautobot:
     container_name: nautobot
-    image: "ghcr.io/networkbuild3r/nautobot_enablement:latest"
+    image: "ghcr.io/aheadaviation/nautobot_enablement:latest"
     env_file:
       - "local.env"
     ports:
@@ -14,7 +14,7 @@ services:
   # Celery worker must only be used in > 1.1.0 installs. If setting to a previous install, remove this worker
   # ----------------------------------
   celery_worker:
-    image: "ghcr.io/networkbuild3r/nautobot_enablement:latest"
+    image: "ghcr.io/aheadaviation/nautobot_enablement:latest"
     entrypoint: "sh -c 'nautobot-server celery worker -l $$NAUTOBOT_LOG_LEVEL'"
     healthcheck:
       interval: "5s"
@@ -32,7 +32,7 @@ services:
   # Celery beat must only be used in > 1.2.0 installs. If setting to a previous install, remove this worker
   # ----------------------------------
   celery_beat:
-    image: "ghcr.io/networkbuild3r/nautobot_enablement:latest"
+    image: "ghcr.io/aheadaviation/nautobot_enablement:latest"
     entrypoint: "sh -c 'nautobot-server celery beat -l $$NAUTOBOT_LOG_LEVEL'"
     healthcheck:
       interval: "5s"

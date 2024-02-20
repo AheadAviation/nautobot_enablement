@@ -23,6 +23,7 @@ RUN pip3 install --upgrade pip wheel && pip3 install django-auth-ldap
 #RUN pip install git+https://github.com/nautobot/nautobot-plugin-version-control.git
 #RUN pip install git+https://github.com/nautobot/nautobot-app-floor-plan.git
 #RUN pip install git+https://github.com/nautobot/nautobot-app-chatops.git
+# RUN pip install git+https://github.com/nautobot/nautobot-plugin-secrets-providers.git@v2.0.1
 
 RUN pip install git+https://github.com/nautobot/nautobot-plugin-golden-config.git@v2.0.1
 RUN pip install git+https://github.com/nautobot/nautobot-plugin-welcome-wizard.git@v2.0.0
@@ -30,7 +31,6 @@ RUN pip install nautobot-ssot[all]==2.2.0
 RUN pip install git+https://github.com/nautobot/nautobot-plugin-capacity-metrics.git@v3.0.1
 RUN pip install git+https://github.com/nautobot/nautobot-plugin-device-lifecycle-mgmt.git@v2.0.3
 RUN pip install git+https://github.com/nautobot/nautobot-plugin-bgp-models.git@v0.20.0
-RUN pip install git+https://github.com/nautobot/nautobot-plugin-secrets-providers.git@v2.0.1
 RUN pip install git+https://github.com/nautobot/nautobot-plugin-nornir.git@v2.0.0
 RUN pip install git+https://github.com/nautobot/nautobot-plugin-device-onboarding.git@v3.0.1
 RUN pip install git+https://github.com/nautobot/nautobot-app-data-validation-engine.git@v3.1.0
