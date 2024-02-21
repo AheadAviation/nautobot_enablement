@@ -1,31 +1,23 @@
 #!/bin/bash
 
-# Update package list
-sudo apt-get update
+# Detect the processor architecture
+ARCH=$(uname -m)
 
-# Install required packages
-sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common git
+# Use the 'branch' environment variable if set, otherwise default to 'main'
+branch="${branch:-main}"
 
-# Install Docker
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-sudo apt-get update
-sudo apt-get install -y docker-ce
-
-# Install Docker Compose
-sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
-
-# Verify Installation
-docker --version
-docker-compose --version
-
-# Install Git
-sudo apt-get install -y git
-
-# Clone your repository
-git clone https://github.com/AheadAviation/nautobot_enablement.git
-cd nautobot_enablement
-
-# Run Docker Compose
-docker-compose up -d
+# Execute architecture-specific script based on detected architecture
+case "$ARCH" in
+    x86_64)
+        echo "Detected x86_64 architecture. Executing x86_64-specific script."
+        curl -sSL "https://raw.githubusercontent.com/AheadAviation/nautobot_enablement/${branch}/setup_x86_64.sh" | bash
+        ;;
+    arm64)
+        echo "Detected arm64 architecture. Executing arm64-specific script."
+        curl -sSL "https://raw.githubusercontent.com/AheadAviation/nautobot_enablement/${branch}/setup_arm64.sh" | bash
+        ;;
+    *)
+        echo "Unsupported architecture: $ARCH"
+        exit 1
+        ;;
+esac
