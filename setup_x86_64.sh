@@ -1,12 +1,5 @@
 #!/bin/bash
 
-# Check for x86_64 architecture
-ARCH=$(uname -m)
-if [ "$ARCH" != "x86_64" ]; then
-    echo "This script is intended only for x86_64 architecture."
-    exit 1
-fi
-
 # Update package list
 sudo apt-get update
 
@@ -27,8 +20,36 @@ sudo chmod +x /usr/local/bin/docker-compose
 docker --version
 docker-compose --version
 
-# Install Git
-sudo apt-get install -y git
+#docker post-install stuff
+groupadd docker
+usermod -aG docker $USER
+usermod -aG docker-compose $USER
+su -c $USER
+systemctl enable docker.service
+systemctl enable containerd.service
+source ~/.bashrc
+
+#install gdown so we can get arista images
+pip3 install gdown
+mkdir -p ~/arista/eos_images
+cd ~/arista/eos_images
+gdown --fuzzy https://drive.google.com/file/d/1NhmEw1m9mdqm7qGaq7xzCnIzuTgS4qHt/view?usp=drive_link
+docker import cEOS-lab-4.31.2F.tar ceos-lab:4.31.2F
+cd ~/arista
+git config --global useremail "autolab@ahead.com"
+git config --global user.email "autolab@ahead.com"
+
+#install containerlab
+bash -c "$(curl -sL https://get.containerlab.dev)"
+groupadd containerlab
+usermod -aG containerlab $USER
+su -c $USER
+
+# Install Ansible
+echo -e "Installing Ansible"
+add-apt-repository --yes --update ppa:ansible/ansible
+pip install ansible
+source ~/.bashrc
 
 # Clone your repository
 git clone https://github.com/AheadAviation/nautobot_enablement.git
