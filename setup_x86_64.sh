@@ -53,14 +53,15 @@ bash -c "$(curl -sL https://get.containerlab.dev)"
 groupadd containerlab || true  # Ignore error if group already exists
 usermod -aG containerlab $SUDO_USER
 
+# Grab Topology File for containerlabs
+
+
 # Install Ansible
 echo -e "Installing Ansible"
 add-apt-repository --yes --update ppa:ansible/ansible
 apt-get install -y ansible
 
-# Clone your repository
-git clone https://github.com/AheadAviation/nautobot_enablement.git
-cd nautobot_enablement
+wget https://github.com/AheadAviation/nautobot_enablement/blob/clabs/base-topology.yaml ~/clabs
 
 # Run Docker Compose
 docker-compose up -d

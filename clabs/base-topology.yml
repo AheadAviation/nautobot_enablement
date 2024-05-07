@@ -1,0 +1,46 @@
+name: Arista_Spine_Leaf
+
+mgmt:
+  network: 'mgmt_ceos_fabric'
+  ipv4-subnet: 172.19.0.0/24
+
+topology:
+  kinds:
+    ceos:
+      image: ceos-lab:4.31.2F
+  nodes:
+    spine1:
+      kind: ceos
+      image: ceos-lab:4.31.2F
+      mgmt-ipv4: 172.19.0.100
+    spine2:
+      kind: ceos
+      image: ceos-lab:4.31.2F
+      mgmt-ipv4: 172.19.0.200
+    leaf1:
+      kind: ceos
+      image: ceos-lab:4.31.2F
+      mgmt-ipv4: 172.19.0.110
+    leaf2:
+      kind: ceos
+      image: ceos-lab:4.31.2F
+      mgmt-ipv4: 172.19.0.120
+    leaf3:
+      kind: ceos
+      image: ceos-lab:4.31.2F
+      mgmt-ipv4: 172.19.0.130
+    leaf4: 
+      kind: ceos
+      image: ceos-lab:4.31.2F
+      mgmt-ipv4: 172.19.0.140
+
+  links:
+  #Spine to Leaf 
+    - endpoints: ["spine1:eth1", "leaf1:eth1"]
+    - endpoints: ["spine1:eth2", "leaf2:eth1"]
+    - endpoints: ["spine1:eth3", "leaf3:eth1"]
+    - endpoints: ["spine1:eth4", "leaf4:eth1"]
+    - endpoints: ["spine2:eth1", "leaf1:eth2"]
+    - endpoints: ["spine2:eth2", "leaf2:eth2"]
+    - endpoints: ["spine2:eth3", "leaf3:eth2"]
+    - endpoints: ["spine2:eth4", "leaf4:eth2"]
