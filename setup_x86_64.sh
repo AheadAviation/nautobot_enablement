@@ -53,18 +53,15 @@ bash -c "$(curl -sL https://get.containerlab.dev)"
 groupadd containerlab || true  # Ignore error if group already exists
 usermod -aG containerlab $SUDO_USER
 
-# Grab Topology File for containerlabs
-
-
 # Install Ansible
 echo -e "Installing Ansible"
 add-apt-repository --yes --update ppa:ansible/ansible
 apt-get install -y ansible
 
-wget https://github.com/AheadAviation/nautobot_enablement/blob/clabs/base-topology.yaml ~/clabs
-
 # Run Docker Compose
 docker-compose up -d
+
+containerlab deploy -c -t https://github.com/AheadAviation/nautobot_enablement/blob/main/clabs/base-topology.yml
 
 # Reminder for the user
 echo "Please log out and log back in for group changes to take effect."
