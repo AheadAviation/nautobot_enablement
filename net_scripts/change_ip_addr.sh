@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Get the name of the network interface
 #set output to green
 GREEN='\033[0;32m'
