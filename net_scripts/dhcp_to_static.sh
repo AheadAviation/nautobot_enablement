@@ -30,6 +30,10 @@ if [[ $DHCPENABLED == "true" ]]; then
     while [[ ! $change_to_static =~ ^[YyNn]$ ]]; do
         read -p "Please answer with 'Y' or 'N': " change_to_static
     done
+else 
+    echo -e "\n\n\n\n\033[0;31mDHCP is not enabled. Please use the change_ip script to change static IP settings. Exiting script.\033[0m"
+    exit 1
+fi
     if [[ $change_to_static =~ ^[Yy]$ || $change_to_static == "" ]]; then
         # Prompt the user for an IP address
         read -p "Enter your new static IP address: " ip_address
@@ -68,3 +72,4 @@ if [[ $DHCPENABLED == "true" ]]; then
         sudo -s netplan apply
 
     fi
+fi
