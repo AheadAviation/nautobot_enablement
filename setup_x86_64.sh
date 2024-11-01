@@ -21,6 +21,8 @@ fi
 # Pull down repo into home directory
 git clone https://github.com/AheadAviation/nautobot_enablement.git
 
+git checkout feature-nerd-cli
+
 cd nautobot_enablement
 
 # Update package list
