@@ -19,9 +19,7 @@ else
 fi
 
 # Pull down repo into home directory
-git clone https://github.com/AheadAviation/nautobot_enablement.git
-
-git checkout feature-nerd-cli
+git clone --branch feature-nerd-cli https://github.com/AheadAviation/nautobot_enablement.git
 
 cd nautobot_enablement
 
