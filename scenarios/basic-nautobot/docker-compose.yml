@@ -1,0 +1,81 @@
+---
+# networks:
+#   network-observability:
+#     external: true
+#     name: network-observability
+
+# volumes:
+#   nautobot_postgres_data:
+#   loki_data:
+#   prometheus_data:
+#   grafana_data:
+#   alertmanager_data:
+
+services:
+  nautobot:
+    container_name: nautobot
+    image: "ghcr.io/aheadaviation/nautobot_enablement:latest"
+    env_file:
+      - "../../local.env"
+    ports:
+      - "8442:8443"
+      - "8079:8080"
+    restart: "unless-stopped"
+  # ----------------------------------
+  # Celery worker must only be used in > 1.1.0 installs. If setting to a previous install, remove this worker
+  # ----------------------------------
+  celery_worker:
+    image: "ghcr.io/aheadaviation/nautobot_enablement:latest"
+    entrypoint: "sh -c 'nautobot-server celery worker -l $$NAUTOBOT_LOG_LEVEL'"
+    healthcheck:
+      interval: "5s"
+      timeout: "5s"
+      start_period: "5s"
+      retries: 3
+      test: ["CMD", "nautobot-server", "health_check"]
+    depends_on:
+      - "nautobot"
+      - "redis"
+    env_file:
+      - "../../local.env"
+    tty: true
+  # ----------------------------------
+  # Celery beat must only be used in > 1.2.0 installs. If setting to a previous install, remove this worker
+  # ----------------------------------
+  celery_beat:
+    image: "ghcr.io/aheadaviation/nautobot_enablement:latest"
+    entrypoint: "sh -c 'nautobot-server celery beat -l $$NAUTOBOT_LOG_LEVEL'"
+    healthcheck:
+      interval: "5s"
+      timeout: "5s"
+      start_period: "5s"
+      retries: 3
+      test: ["CMD", "nautobot-server", "health_check"]
+    depends_on:
+      - "nautobot"
+      - "redis"
+    env_file:
+      - "../../local.env"
+    tty: true
+  redis:
+    image: "redis:alpine"
+    env_file:
+      - "../../local.env"
+    command:
+      - "sh"
+      - "-c"  # this is to evaluate the $REDIS_PASSWORD from the env
+      - "redis-server --appendonly yes --requirepass $$NAUTOBOT_REDIS_PASSWORD"  ## $$ because of docker-compose
+    restart: "unless-stopped"
+  db_nauto:
+    image: "postgres:13"
+    env_file:
+      - "../../local.env"
+    environment:
+      NAUTOBOT_DB_ENGINE: "django.db.backends.postgres"
+    volumes:
+      - nautobot_db_volume:/var/lib/postgresql/data
+    restart: "unless-stopped"
+
+volumes:
+  nautobot_db_volume:
+    driver: local

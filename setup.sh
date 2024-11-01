@@ -10,11 +10,11 @@ branch="${branch:-main}"
 case "$ARCH" in
     x86_64)
         echo "Detected x86_64 architecture. Executing x86_64-specific script."
-        curl -sSL "https://raw.githubusercontent.com/AheadAviation/nautobot_enablement/${branch}/setup_x86_64.sh" | bash
+        curl -sSL "https://raw.githubusercontent.com/AheadAviation/nautobot_enablement/${branch}/setup_x86_64.sh" | sudo bash
         ;;
     arm64)
         echo "Detected arm64 architecture. Executing arm64-specific script."
-        curl -sSL "https://raw.githubusercontent.com/AheadAviation/nautobot_enablement/${branch}/setup_arm64.sh" | bash
+        curl -sSL "https://raw.githubusercontent.com/AheadAviation/nautobot_enablement/${branch}/setup_arm64.sh" | sudo bash
         ;;
     *)
         echo "Unsupported architecture: $ARCH"
