@@ -7,6 +7,7 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 WORK_DIR=/home/$SUDO_USER/
+branch="${branch:-main}"
 
 cd $WORK_DIR
 
@@ -19,7 +20,7 @@ else
 fi
 
 # Pull down repo into home directory
-git clone --branch feature-nerd-cli https://github.com/AheadAviation/nautobot_enablement.git
+git clone --branch ${branch} https://github.com/AheadAviation/nautobot_enablement.git
 
 cd nautobot_enablement
 
