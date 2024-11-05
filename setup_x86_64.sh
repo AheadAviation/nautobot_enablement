@@ -7,6 +7,7 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 WORK_DIR=/home/$SUDO_USER/
+branch="${branch:-main}"
 
 cd $WORK_DIR
 
@@ -19,7 +20,7 @@ else
 fi
 
 # Pull down repo into home directory
-git clone https://github.com/AheadAviation/nautobot_enablement.git
+git clone --branch ${branch} https://github.com/AheadAviation/nautobot_enablement.git
 
 cd nautobot_enablement
 
@@ -53,8 +54,7 @@ python3 -m venv nautobot_enablement_venv
 
 source ./nautobot_enablement_venv/bin/activate
 
-# Install gdown with pip3
-pip3 install gdown
+pip3 install .
 
 # Download Arista images
 mkdir -p $WORK_DIR/arista/eos_images
@@ -77,15 +77,6 @@ fi
 bash -c "$(curl -sL https://get.containerlab.dev)"
 groupadd containerlab || true  # Ignore error if group already exists
 usermod -aG containerlab $SUDO_USER
-
-# Install Ansible
-pip3 install ansible
-
-# Deploy containerlab 'base-topology'
-containerlab deploy -c -t ./clabs/base-topology.yml
-
-# Run Docker Compose
-docker compose up -d
 
 # Reminder for the user
 echo "Please log out and log back in for group changes to take effect."

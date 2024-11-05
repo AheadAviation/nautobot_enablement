@@ -1,0 +1,42 @@
+# Lab variables file used to populate Nautobot
+---
+prefixes:
+  - prefix: "10.0.0.0/16"
+    name: "fabric_loopback_prefix"
+
+nodes:
+  spine1:
+    interfaces:
+      - name: Loopback0
+        ipv4: 10.0.1.1/24
+        role: loopback
+
+  spine2:
+    interfaces:
+      - name: Loopback0
+        ipv4: 10.0.2.2/24
+        role: loopback
+
+  leaf1:
+    interfaces:
+      - name: Loopback0
+        ipv4: 10.0.3.3/24
+        role: loopback
+
+  leaf2:
+    interfaces:
+      - name: Loopback0
+        ipv4: 10.0.4.4/24
+        role: loopback
+  
+  leaf3:
+    interfaces:
+      - name: Loopback0
+        ipv4: 10.0.5.5/24
+        role: loopback
+
+  leaf4:
+    interfaces:
+      - name: Loopback0
+        ipv4: 10.0.6.6/24
+        role: loopback
